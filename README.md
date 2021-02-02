@@ -44,7 +44,7 @@ REST API for car inventory operations
     "name": "Brand name",
     "kind": "Gas / Hybrid / Electric",
     "manufacturer": "Name of manufacturer",
-    "license": "License number"
+    "license": "License number",
     "available": "Yes or No"
 }
 ```

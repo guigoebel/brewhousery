@@ -8,14 +8,14 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/saurabmish/Car-Inventory/handlers"
+	"github.com/saurabmish/Coffee-Shop/handlers"
 )
 
 func main() {
 	// create logger to inject into reference handler
-	l := log.New(os.Stdout, "Car API service ", log.LstdFlags)
+	l := log.New(os.Stdout, "Coffee shop API service ", log.LstdFlags)
 	// create reference to hello handler
-	helloHandler := handlers.NewHello(l)
+	helloHandler := handlers.NewProducts(l)
 	// register handler with server
 	serveMux := http.NewServeMux()
 	serveMux.Handle("/", helloHandler)
@@ -38,7 +38,7 @@ func main() {
 	}()
 
 	// ensure graceful shutdown of server
-	signalChannel := make(chan os.Signal)
+	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel, os.Interrupt)
 	signal.Notify(signalChannel, os.Kill)
 

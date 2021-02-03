@@ -20,12 +20,10 @@ jobs:
     - stage: coverage
       script:
         - go test -v -coverprofile coverage.out ./...
-        - go tool cover -html=coverage.out -o coverage.html
+        - go tool cover -html=coverage.out -o ./docs/coverage.html
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -f coverage.html
-  - curl -s https://codecov.io/bash > codecov.sh
-  - bash codecov.sh -f coverage.html
+  - bash <(curl -s https://codecov.io/bash) -f ./docs/coverage.html
 
 notifications:
   email:

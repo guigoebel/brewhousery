@@ -1,6 +1,6 @@
 # Coffee Shop
 
-REST API for for an online coffee shop.
+REST API for an online coffee shop
 
 + Native packages, no dependencies
 + Commonly used HTTP methods

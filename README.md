@@ -1,6 +1,6 @@
 # Coffee Shop
 
-REST API for car inventory operations
+REST API for an online coffee shop
 
 + Native packages, no dependencies
 + Commonly used HTTP methods

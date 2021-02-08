@@ -23,3 +23,18 @@ REST API for an online coffee shop
     "Expires On": UTC date                         string
 }
 ```
+
+
++ Run the Go server from the project root. 
+
+  `go run server.go`
+
+  **NOTE:** For better formatting, pipe curl operations with `jq`
+
++ GET request
+
+  `curl localhost:8080 | jq`
+
++ POST request
+
+  `curl localhost:8080 -d '{"name": "Tea", "description": "A nice cup of tea!"}' | jq`

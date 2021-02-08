@@ -24,6 +24,7 @@ REST API for an online coffee shop
 }
 ```
 
+## Operations
 
 + Run the Go server from the project root. 
 

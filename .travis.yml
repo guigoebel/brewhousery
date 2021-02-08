@@ -8,22 +8,24 @@ go:
   - 1.15.x
 
 stages:
-  - testing
-  - coverage
+  - test
+  - cover
+  - report
 
 jobs:
   include:
-    - stage: testing
+    - stage: test
       script:
         - go test -v ./...
 
-    - stage: coverage
+    - stage: cover
       script:
         - go test -v -coverprofile coverage.out ./...
         - go tool cover -html=coverage.out -o ./docs/coverage.html
 
-after_success:
-  - bash <(curl -s https://codecov.io/bash) -f ./docs/coverage.html
+    - stage: report
+      script:
+        - bash <(curl -s https://codecov.io/bash) -f ./docs/coverage.html
 
 notifications:
   email:

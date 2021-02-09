@@ -3,6 +3,8 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"regexp"
+	"strconv"
 
 	"github.com/saurabmish/Coffee-Shop/data"
 )
@@ -27,6 +29,30 @@ func (p *Products) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		p.addProducts(w, r)
 		return
 	}
+
+	if r.Method == http.MethodPut {
+		reg := regexp.MustCompile(`/([0-9]+)`)
+		g := reg.FindAllStringSubmatch(r.URL.Path, -1)
+		if len(g) != 1 {
+			http.Error(w, "Invalid URI; More than one ID", http.StatusBadRequest)
+			return
+		}
+		if len(g[0]) != 2 {
+			http.Error(w, "Invalid URI; More than one capture group", http.StatusBadRequest)
+			return
+		}
+
+		idString := g[0][1]
+		id, err := strconv.Atoi(idString)
+		if err != nil {
+			http.Error(w, "Invalid URI; Unable to convert string ID to integer", http.StatusBadRequest)
+			return
+		}
+
+		p.updateProduct(id, w, r)
+		return
+	}
+
 	w.WriteHeader(http.StatusMethodNotAllowed)
 }
 
@@ -51,4 +77,24 @@ func (p *Products) addProducts(w http.ResponseWriter, r *http.Request) {
 
 	//p.l.Printf("PRODUCT: %#v", products)
 	data.AddProducts(products)
+}
+
+func (p *Products) updateProduct(id int, w http.ResponseWriter, r *http.Request) {
+	p.l.Println("Endpoint for PUT product")
+
+	product := &data.Product{}
+	err := product.FromJSON(r.Body)
+	if err != nil {
+		http.Error(w, "Unable to unmarshall JSON", http.StatusInternalServerError)
+	}
+
+	err = data.UpdateProduct(id, product)
+	if err != data.ErrProductNotFound {
+		http.Error(w, "Product not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		http.Error(w, "Product not found", http.StatusInternalServerError)
+		return
+	}
 }

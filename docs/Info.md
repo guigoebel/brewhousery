@@ -1,5 +1,13 @@
 # Setup
 
++ Install Go
+
+  `brew install go`
+
++ Install Go tools
+
+  `go get -u golang.org/x/tools/...`
+
 + Install `jq` to format `curl` output
 
   `brew install jq`

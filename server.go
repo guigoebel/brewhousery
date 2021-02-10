@@ -8,17 +8,25 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/saurabmish/Coffee-Shop/handlers"
 )
 
 func main() {
-	// create logger to inject into reference handler
 	l := log.New(os.Stdout, "Coffee shop API service ", log.LstdFlags)
-	// create reference to hello handler
-	helloHandler := handlers.NewProducts(l)
-	// register handler with server
-	serveMux := http.NewServeMux()
-	serveMux.Handle("/", helloHandler)
+	coffeeHandler := handlers.NewProducts(l)
+	serveMux := mux.NewRouter()
+
+	getRouter := serveMux.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/", coffeeHandler.GetProducts)
+
+	putRouter := serveMux.Methods(http.MethodPut).Subrouter()
+	putRouter.HandleFunc("/{id:[0-9]+}", coffeeHandler.UpdateProduct)
+	putRouter.Use(coffeeHandler.MiddlewareProductValidation)
+
+	postRouter := serveMux.Methods(http.MethodPost).Subrouter()
+	postRouter.HandleFunc("/", coffeeHandler.AddProducts)
+	postRouter.Use(coffeeHandler.MiddlewareProductValidation)
 
 	// reliability pattern for server
 	server := &http.Server{

@@ -4,7 +4,6 @@
 
 REST API for an online coffee shop
 
-+ Native packages, no dependencies
 + Commonly used HTTP methods
 + JSON request and response using curl
 

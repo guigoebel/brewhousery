@@ -3,11 +3,8 @@ module github.com/saurabmish/Coffee-Shop
 go 1.15
 
 require (
+	github.com/go-playground/universal-translator v0.17.0 // indirect
+	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gorilla/mux v1.8.0
-	github.com/yuin/goldmark v1.3.2 // indirect
-	golang.org/x/mod v0.4.1 // indirect
-	golang.org/x/net v0.0.0-20210119194325-5f4716e94777 // indirect
-	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
-	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
-	golang.org/x/tools v0.1.0 // indirect
+	github.com/leodido/go-urn v1.2.1 // indirect
 )

@@ -39,8 +39,8 @@ REST API for an online coffee shop
 
   + POST (ID is auto-incremented)
 
-    `curl localhost:8080 -d '{"name": "Tea", "description": "A nice cup of tea!"}' | jq`
+    `curl localhost:8080 -d '{"name": "Tea", "description": "A nice cup of tea!", "price": 2.0, "sku": "TEA-WAT-MIL-SUG"}' | jq`
 
   + PUT (replace data with ID 3)
    
-    `curl localhost:8080/3 -XPUT -d '{"name": "Mocha", "description": "Chocolate-flavoured variant of latte"}' | jq`
+    `curl localhost:8080/3 -XPUT -d '{"name": "Mocha", "description": "Chocolate-flavoured variant of latte", "price": 3.00, "sku": "COF-MOC-VAR-LAT"}' | jq`

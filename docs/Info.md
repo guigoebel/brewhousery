@@ -4,9 +4,13 @@
 
   `brew install go`
 
-+ Install Go tools
++ Install project dependencies
 
-  `go get -u golang.org/x/tools/...`
+  ```
+  go get -u golang.org/x/tools/...
+  go get -u github.com/gorilla/mux
+  go get github.com/go-playground/validator/v10
+  ```
 
 + Install `jq` to format `curl` output
 

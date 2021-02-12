@@ -13,3 +13,7 @@ curl localhost:8080 | jq
 curl localhost:8080/1 | jq
 curl localhost:8080/2 | jq
 curl localhost:8080/3 | jq
+
+# Delete
+curl localhost:8080/2 -XDELETE
+curl localhost:8080 | jq

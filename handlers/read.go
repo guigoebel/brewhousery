@@ -7,17 +7,19 @@ import (
 	"strconv"
 )
 
-func (p *Products) GetAllProducts(w http.ResponseWriter, r *http.Request) {
-	p.l.Println("Endpoint for GET all products")
+func (p *Products) RetrieveAll(w http.ResponseWriter, r *http.Request) {
+	p.l.Println("[INFO] Endpoint for READ request")
+
 	listProducts := data.GetAll()
+	p.l.Println("[DEBUG] Retrieved all products")
 	err := listProducts.ToJSON(w)
 	if err != nil {
 		http.Error(w, "Unable to parse values to JSON", http.StatusInternalServerError)
 	}
 }
 
-func (p *Products) GetSpecificProduct(w http.ResponseWriter, r *http.Request) {
-	p.l.Println("Endpoint for GET one product")
+func (p *Products) RetrieveSingle(w http.ResponseWriter, r *http.Request) {
+	p.l.Println("[INFO] Endpoint for READ request")
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -25,7 +27,7 @@ func (p *Products) GetSpecificProduct(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	p.l.Println("[DEBUG] Product ID is: ", id)
+	p.l.Println("[DEBUG] Retrieved product ID: ", id)
 	product, err := data.GetSpecific(id)
 	if err != nil {
 		http.Error(w, "Unable to find product with the given ID ...", http.StatusInternalServerError)

@@ -1,13 +1,8 @@
 package data
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"regexp"
 	"time"
-
-	"github.com/go-playground/validator"
 )
 
 type Product struct {
@@ -20,33 +15,31 @@ type Product struct {
 	ExpiresOn      string  `json:"expiry"`
 }
 
+var productList = []*Product{
+	&Product{
+		ID:             1,
+		Name:           "Latte",
+		Description:    "Frothy milk coffee",
+		Price:          2.45,
+		SKU:            "COF-LAT-MIL-SUG",
+		ManufacturedOn: time.Now().UTC().String(),
+		ExpiresOn:      time.Now().UTC().String(),
+	},
+
+	&Product{
+		ID:             2,
+		Name:           "Expresso",
+		Description:    "Short and strong coffee without milk",
+		Price:          1.99,
+		SKU:            "COF-EXP-NOM-SUG",
+		ManufacturedOn: time.Now().UTC().String(),
+		ExpiresOn:      time.Now().UTC().String(),
+	},
+}
+
+var ErrProductNotFound = fmt.Errorf("Product not found ...")
+
 type Products []*Product
-
-func (p *Product) Validate() error {
-	validate := validator.New()
-	validate.RegisterValidation("sku", validateSKU)
-	return validate.Struct(p)
-}
-
-func validateSKU(fl validator.FieldLevel) bool {
-	re := regexp.MustCompile(`[A-Z]+-[A-Z]+-[A-Z]+-[A-Z]+`)
-	matches := re.FindAllString(fl.Field().String(), -1)
-
-	if len(matches) != 1 {
-		return false
-	}
-	return true
-}
-
-func (p *Products) ToJSON(w io.Writer) error {
-	enc := json.NewEncoder(w)
-	return enc.Encode(p)
-}
-
-func (p *Product) FromJSON(r io.Reader) error {
-	dec := json.NewDecoder(r)
-	return dec.Decode(p)
-}
 
 func GetProducts() Products {
 	return productList
@@ -72,8 +65,6 @@ func getNextID() int {
 	return lp.ID + 1
 }
 
-var ErrProductNotFound = fmt.Errorf("Product not found ...")
-
 func findProduct(id int) (*Product, int, error) {
 	for i, p := range productList {
 		if p.ID == id {
@@ -81,26 +72,4 @@ func findProduct(id int) (*Product, int, error) {
 		}
 	}
 	return nil, -1, ErrProductNotFound
-}
-
-var productList = []*Product{
-	&Product{
-		ID:             1,
-		Name:           "Latte",
-		Description:    "Frothy milk coffee",
-		Price:          2.45,
-		SKU:            "COF-LAT-MIL-SUG",
-		ManufacturedOn: time.Now().UTC().String(),
-		ExpiresOn:      time.Now().UTC().String(),
-	},
-
-	&Product{
-		ID:             2,
-		Name:           "Expresso",
-		Description:    "Short and strong coffee without milk",
-		Price:          1.99,
-		SKU:            "COF-EXP-NOM-SUG",
-		ManufacturedOn: time.Now().UTC().String(),
-		ExpiresOn:      time.Now().UTC().String(),
-	},
 }

@@ -18,7 +18,8 @@ func main() {
 	serveMux := mux.NewRouter()
 
 	getRouter := serveMux.Methods(http.MethodGet).Subrouter()
-	getRouter.HandleFunc("/", coffeeHandler.GetProducts)
+	getRouter.HandleFunc("/", coffeeHandler.GetAllProducts)
+	getRouter.HandleFunc("/{id:[0-9]+}", coffeeHandler.GetSpecificProduct)
 
 	putRouter := serveMux.Methods(http.MethodPut).Subrouter()
 	putRouter.HandleFunc("/{id:[0-9]+}", coffeeHandler.UpdateProduct)

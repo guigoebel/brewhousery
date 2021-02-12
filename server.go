@@ -18,16 +18,19 @@ func main() {
 	serveMux := mux.NewRouter()
 
 	getRouter := serveMux.Methods(http.MethodGet).Subrouter()
-	getRouter.HandleFunc("/", coffeeHandler.GetAllProducts)
-	getRouter.HandleFunc("/{id:[0-9]+}", coffeeHandler.GetSpecificProduct)
+	getRouter.HandleFunc("/", coffeeHandler.RetrieveAll)
+	getRouter.HandleFunc("/{id:[0-9]+}", coffeeHandler.RetrieveSingle)
 
 	putRouter := serveMux.Methods(http.MethodPut).Subrouter()
-	putRouter.HandleFunc("/{id:[0-9]+}", coffeeHandler.UpdateProduct)
+	putRouter.HandleFunc("/{id:[0-9]+}", coffeeHandler.Update)
 	putRouter.Use(coffeeHandler.MiddlewareProductValidation)
 
 	postRouter := serveMux.Methods(http.MethodPost).Subrouter()
-	postRouter.HandleFunc("/", coffeeHandler.AddProducts)
+	postRouter.HandleFunc("/", coffeeHandler.Add)
 	postRouter.Use(coffeeHandler.MiddlewareProductValidation)
+
+	deleteRouter := serveMux.Methods(http.MethodDelete).Subrouter()
+	deleteRouter.HandleFunc("/{id:[0-9]+}", coffeeHandler.Remove)
 
 	// reliability pattern for server
 	server := &http.Server{

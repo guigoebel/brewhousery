@@ -53,8 +53,9 @@ func GetSpecific(id int) (*Product, error) {
 	return productList[pos], nil
 }
 
-func AddProducts(p *Product) {
-	p.ID = getNextID()
+func AddProduct(p *Product) {
+	currentID := productList[len(productList)-1].ID
+	p.ID = currentID + 1
 	productList = append(productList, p)
 }
 
@@ -68,9 +69,13 @@ func UpdateProduct(id int, p *Product) error {
 	return nil
 }
 
-func getNextID() int {
-	lp := productList[len(productList)-1]
-	return lp.ID + 1
+func DeleteProduct(id int) error {
+	pos := findProductIndex(id)
+	if pos == -1 {
+		return ErrProductNotFound
+	}
+	productList = append(productList[:pos], productList[pos+1:]...)
+	return nil
 }
 
 func findProductIndex(id int) int {

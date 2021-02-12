@@ -7,8 +7,8 @@ import (
 	"strconv"
 )
 
-func (p Products) UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	p.l.Println("Endpoint for PUT product")
+func (p Products) Update(w http.ResponseWriter, r *http.Request) {
+	p.l.Println("[INFO] Endpoint for PUT request")
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -20,11 +20,11 @@ func (p Products) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 
 	err = data.UpdateProduct(id, &product)
 	if err == data.ErrProductNotFound {
-		http.Error(w, "Product not found", http.StatusNotFound)
+		http.Error(w, "Cannot update; Product not found ...", http.StatusNotFound)
 		return
 	}
 	if err != nil {
-		http.Error(w, "Product not found", http.StatusInternalServerError)
+		http.Error(w, "Cannot update product ...", http.StatusInternalServerError)
 		return
 	}
 }

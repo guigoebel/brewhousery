@@ -13,7 +13,7 @@ func (p Products) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, "Unable to convert ID", http.StatusBadRequest)
+		panic(err)
 	}
 
 	product := r.Context().Value(KeyProduct{}).(data.Product)

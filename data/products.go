@@ -41,8 +41,16 @@ var ErrProductNotFound = fmt.Errorf("Product not found ...")
 
 type Products []*Product
 
-func GetProducts() Products {
+func GetAll() Products {
 	return productList
+}
+
+func GetSpecific(id int) (*Product, error) {
+	pos := findProductIndex(id)
+	if pos == -1 {
+		return nil, ErrProductNotFound
+	}
+	return productList[pos], nil
 }
 
 func AddProducts(p *Product) {
@@ -51,9 +59,9 @@ func AddProducts(p *Product) {
 }
 
 func UpdateProduct(id int, p *Product) error {
-	_, pos, err := findProduct(id)
-	if err != nil {
-		return err
+	pos := findProductIndex(id)
+	if pos == -1 {
+		return ErrProductNotFound
 	}
 	p.ID = id
 	productList[pos] = p
@@ -65,11 +73,11 @@ func getNextID() int {
 	return lp.ID + 1
 }
 
-func findProduct(id int) (*Product, int, error) {
+func findProductIndex(id int) int {
 	for i, p := range productList {
 		if p.ID == id {
-			return p, i, nil
+			return i
 		}
 	}
-	return nil, -1, ErrProductNotFound
+	return -1
 }

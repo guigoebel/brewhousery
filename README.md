@@ -44,3 +44,7 @@ REST API for an online coffee shop
   + PUT (replace data with ID 3)
    
     `curl localhost:8080/3 -XPUT -d '{"name": "Mocha", "description": "Chocolate-flavoured variant of latte", "price": 3.00, "sku": "COF-MOC-VAR-LAT"}' | jq`
+
+  + DELETE
+
+    `curl localhost:8080/2 -XDELETE`

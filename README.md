@@ -2,49 +2,64 @@
 
 # Coffee Shop
 
-REST API for an online coffee shop
+APIs of commonly used HTTP verbs GET, POST, PUT, and DELETE are implemented in a REST-ful manner using micro-services in Go.
 
-+ Commonly used HTTP methods
-+ JSON request and response using curl
+## Features
+
++ Retrieve single product
+
++ Retrieve all products
+
++ Add a new product
+
++ Modify an existing product
+
++ Delete an existing product
 
 ## Data Type
 
-**Temporary in-memory storage**
-
 ```
 {
-    "ID": unique identifier                        integer
-    "Name": type of coffee (latte, expresso, etc.) string
-    "Description": brief info                      string
-    "Price": USD                                   float
-    "SKU": barcode,                                string
-    "Manufactured On": UTC date                    string
-    "Expires On": UTC date                         string
+    ID:              unique integer identifier for coffee product
+    Name:            name of coffee (latte, espresso, etc.)
+    Description:     brief information about coffee
+    Price:           floating point values in USD
+    SKU:             stock-keeping unit is a string separated by "-" after every third character
+    Manufactured On: string in UTC format
+    Expires On:      string in UTC format
 }
 ```
 
 ## Operations
 
-+ Run the Go server from the project root.
+**NOTE**: Execute commands from project root
+
++ Run test cases (in verbose mode):
+
+  `go test -v`
+
++ Run Go server:
 
   `go run server.go`
 
-  **NOTE:** For better formatting, pipe curl operations with `jq`
++ Open a new terminal tab and:
 
-+ HTTP verbs
+  1. Get specific product:
 
-  + GET request
+     `curl localhost:8080/coffee/get/2 | jq`
 
-    `curl localhost:8080 | jq`
+  2. Get all products:
 
-  + POST (ID is auto-incremented)
+     `curl localhost:8080/coffee/get/all | jq`
 
-    `curl localhost:8080 -d '{"name": "Tea", "description": "A nice cup of tea!", "price": 2.0, "sku": "TEA-WAT-MIL-SUG"}' | jq`
+  3. Create a new product:
 
-  + PUT (replace data with ID 3)
-   
-    `curl localhost:8080/3 -XPUT -d '{"name": "Mocha", "description": "Chocolate-flavoured variant of latte", "price": 3.00, "sku": "COF-MOC-VAR-LAT"}' | jq`
+     `curl localhost:8080/coffee/add -d '{"name": "Tea", "description": "A nice cup of tea!", "price": 2.0, "sku": "TEA-WAT-MIL-SUG"}' | jq`
 
-  + DELETE
+  4. Replace an existing product:
 
-    `curl localhost:8080/2 -XDELETE`
+     `curl localhost:8080/coffee/modify/3 -XPUT -d '{"name": "Mocha", "description": "Chocolate-flavoured variant of latte", "price": 3.00, "sku": "COF-MOC-VAR-LAT"}' | jq`
+
+  5. Delete an existing product
+
+     `curl localhost:8080/coffee/remove/2 -XDELETE`

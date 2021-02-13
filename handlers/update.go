@@ -1,24 +1,18 @@
 package handlers
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/saurabmish/Coffee-Shop/data"
 	"net/http"
-	"strconv"
 )
 
-func (p Products) Update(w http.ResponseWriter, r *http.Request) {
+func (p Products) Modify(w http.ResponseWriter, r *http.Request) {
 	p.l.Println("[INFO] Endpoint for PUT request")
 
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		panic(err)
-	}
-
+	id := getProductID(r)
 	product := r.Context().Value(KeyProduct{}).(data.Product)
+	p.l.Println("[DEBUG] Retrieved product from data store")
 
-	err = data.UpdateProduct(id, &product)
+	err := data.UpdateProduct(id, &product)
 	if err == data.ErrProductNotFound {
 		http.Error(w, "Cannot update; Product not found ...", http.StatusNotFound)
 		return

@@ -3,16 +3,17 @@ package handlers
 import (
 	"context"
 	"fmt"
-	"github.com/saurabmish/Coffee-Shop/data"
 	"net/http"
+
+	"github.com/saurabmish/Coffee-Shop/data"
 )
 
 func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		product := data.Product{}
+		product := &data.Product{}
 
-		err := product.FromJSON(r.Body)
+		err := data.FromJSON(product, r.Body)
 		if err != nil {
 			p.l.Println("[ERROR] deserializing product", err)
 			http.Error(w, "Error reading product ...", http.StatusBadRequest)
@@ -26,7 +27,7 @@ func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), KeyProduct{}, product)
+		ctx := context.WithValue(r.Context(), KeyProduct{}, *product)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)

@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"github.com/saurabmish/Coffee-Shop/data"
 	"net/http"
+
+	"github.com/saurabmish/Coffee-Shop/data"
 )
 
 func (p *Products) Remove(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +14,7 @@ func (p *Products) Remove(w http.ResponseWriter, r *http.Request) {
 
 	err := data.DeleteProduct(id)
 	if err == data.ErrProductNotFound {
-		http.Error(w, "Cannot update; Product not found ...", http.StatusNotFound)
+		http.Error(w, "Cannot delete; Product not found ...", http.StatusNotFound)
 		return
 	}
 	if err != nil {

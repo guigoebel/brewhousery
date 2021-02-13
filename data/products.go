@@ -41,11 +41,11 @@ var ErrProductNotFound = fmt.Errorf("Product not found ...")
 
 type Products []*Product
 
-func GetAll() Products {
+func GetAllProducts() Products {
 	return productList
 }
 
-func GetSpecific(id int) (*Product, error) {
+func GetSpecificProduct(id int) (*Product, error) {
 	pos := findProductIndex(id)
 	if pos == -1 {
 		return nil, ErrProductNotFound

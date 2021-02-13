@@ -5,17 +5,15 @@ import (
 	"io"
 )
 
-func (p *Products) ToJSON(w io.Writer) error {
-	enc := json.NewEncoder(w)
-	return enc.Encode(p)
+// ToJSON serializes given interface into JSON string
+func ToJSON(i interface{}, w io.Writer) error {
+	e := json.NewEncoder(w)
+
+	return e.Encode(i)
 }
 
-func (p *Product) FromJSON(r io.Reader) error {
-	dec := json.NewDecoder(r)
-	return dec.Decode(p)
-}
-
-func (p *Product) ToJSONSingle(w io.Writer) error {
-	enc := json.NewEncoder(w)
-	return enc.Encode(p)
+// FromJSON deserializes JSON string object to given interface
+func FromJSON(i interface{}, r io.Reader) error {
+	d := json.NewDecoder(r)
+	return d.Decode(i)
 }

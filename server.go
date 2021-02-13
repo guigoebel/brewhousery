@@ -9,12 +9,15 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/saurabmish/Coffee-Shop/data"
 	"github.com/saurabmish/Coffee-Shop/handlers"
 )
 
 func main() {
 	l := log.New(os.Stdout, "Coffee shop API service ", log.LstdFlags)
-	coffeeHandler := handlers.NewProducts(l)
+	v := data.NewValidation()
+
+	coffeeHandler := handlers.NewProducts(l, v)
 	serveMux := mux.NewRouter()
 
 	getRouter := serveMux.Methods(http.MethodGet).Subrouter()

@@ -1,20 +1,23 @@
 package handlers
 
 import (
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	"github.com/saurabmish/Coffee-Shop/data"
 )
 
 type KeyProduct struct{}
 
 type Products struct {
 	l *log.Logger
+	v *data.Validation
 }
 
-func NewProducts(l *log.Logger) *Products {
-	return &Products{l}
+func NewProducts(l *log.Logger, v *data.Validation) *Products {
+	return &Products{l, v}
 }
 
 // getProductID converts string ID from the request URI to integer ID

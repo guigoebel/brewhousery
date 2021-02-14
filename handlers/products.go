@@ -16,6 +16,10 @@ type Products struct {
 	v *data.Validation
 }
 
+type GenericError struct {
+	Message string `json:"message"`
+}
+
 func NewProducts(l *log.Logger, v *data.Validation) *Products {
 	return &Products{l, v}
 }

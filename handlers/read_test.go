@@ -15,7 +15,7 @@ import (
 )
 
 func Router() *mux.Router {
-	l := log.New(os.Stdout, "Coffee shop API service ", log.LstdFlags)
+	l := log.New(os.Stdout, "Test Coffee shop API service ", log.LstdFlags)
 	v := data.NewValidation()
 
 	coffeeHandler := NewProducts(l, v)

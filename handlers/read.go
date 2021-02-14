@@ -26,7 +26,7 @@ func (p *Products) RetrieveSingle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 
 	id := getProductID(r)
-	p.l.Println("[DEBUG] Retrieved product ID: ", id)
+	p.l.Println("[DEBUG] Retrieved product ID from URL: ", id)
 
 	product, err := data.GetSpecificProduct(id)
 	if err != nil {

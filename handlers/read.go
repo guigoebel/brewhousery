@@ -15,7 +15,9 @@ func (p *Products) RetrieveAll(w http.ResponseWriter, r *http.Request) {
 
 	err := data.ToJSON(products, w)
 	if err != nil {
-		http.Error(w, "Unable to parse values to JSON", http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
+		return
 	}
 }
 
@@ -28,13 +30,16 @@ func (p *Products) RetrieveSingle(w http.ResponseWriter, r *http.Request) {
 
 	product, err := data.GetSpecificProduct(id)
 	if err != nil {
-		http.Error(w, "Unable to find product with the given ID ...", http.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
+		data.ToJSON(&GenericError{Message: "Product not found ..."}, w)
+		p.l.Println("[ERROR] Fetching product with given ID ...", err)
 		return
 	}
 
 	val := data.ToJSON(product, w)
 	if val != nil {
-		http.Error(w, "Unable to parse values to JSON", http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
+		p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
 		return
 	}
 }

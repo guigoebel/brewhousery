@@ -58,7 +58,7 @@ func main() {
 	signal.Notify(signalChannel, os.Kill)
 
 	signal := <-signalChannel
-	l.Println("Received terminate, graceful shutdown", signal)
+	l.Println("Received signal for graceful shutdown", signal)
 	timeoutContext, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	server.Shutdown(timeoutContext)
 }

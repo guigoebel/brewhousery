@@ -13,7 +13,7 @@ func (p Products) Add(w http.ResponseWriter, r *http.Request) {
 	err := data.AddProduct(&product)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		data.ToJSON(&GenericError{Message: "Couldn't create product; ID not found ..."}, w)
+		data.ToJSON(&GenericError{Message: "Couldn't create product ..."}, w)
 		p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
 		return
 	}

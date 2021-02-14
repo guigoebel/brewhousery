@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Router() *mux.Router {
-	l := log.New(os.Stdout, "Test Coffee shop API service ", log.LstdFlags)
+func GetRouter() *mux.Router {
+	l := log.New(os.Stdout, "[TEST] Coffee shop API service ", log.LstdFlags)
 	v := data.NewValidation()
 
 	coffeeHandler := NewProducts(l, v)
@@ -28,7 +28,7 @@ func Router() *mux.Router {
 func TestRetrieveAllProducts(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/coffee/get/all", nil)
 	response := httptest.NewRecorder()
-	Router().ServeHTTP(response, request)
+	GetRouter().ServeHTTP(response, request)
 	assert.Equal(t, 200, response.Code)
 	assert.Equal(t, "application/json", response.Header().Get("Content-Type"))
 }
@@ -36,7 +36,7 @@ func TestRetrieveAllProducts(t *testing.T) {
 func TestRetrieveSingleProduct(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/coffee/get/1", nil)
 	response := httptest.NewRecorder()
-	Router().ServeHTTP(response, request)
+	GetRouter().ServeHTTP(response, request)
 	assert.Equal(t, 200, response.Code, "Product Found!")
 	assert.Equal(t, "application/json", response.Header().Get("Content-Type"))
 }
@@ -44,7 +44,7 @@ func TestRetrieveSingleProduct(t *testing.T) {
 func TestRetrieveNonExistingProduct(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/coffee/get/20", nil)
 	response := httptest.NewRecorder()
-	Router().ServeHTTP(response, request)
+	GetRouter().ServeHTTP(response, request)
 	assert.Equal(t, 404, response.Code, "Unable to find product with the given ID ...")
 	assert.Equal(t, "application/json", response.Header().Get("Content-Type"))
 	assert.Equal(t, `{"message":"Product not found ..."}`, strings.TrimRight(response.Body.String(), "\n"))

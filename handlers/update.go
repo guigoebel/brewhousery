@@ -27,6 +27,5 @@ func (p Products) Modify(w http.ResponseWriter, r *http.Request) {
 		p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
 		return
 	}
-
 	w.WriteHeader(http.StatusNoContent)
 }

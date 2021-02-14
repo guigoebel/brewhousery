@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -45,5 +46,6 @@ func TestRetrieveNonExistingProduct(t *testing.T) {
 	response := httptest.NewRecorder()
 	Router().ServeHTTP(response, request)
 	assert.Equal(t, 404, response.Code, "Unable to find product with the given ID ...")
-	assert.Equal(t, "text/plain; charset=utf-8", response.Header().Get("Content-Type"))
+	assert.Equal(t, "application/json", response.Header().Get("Content-Type"))
+	assert.Equal(t, `{"message":"Product not found ..."}`, strings.TrimRight(response.Body.String(), "\n"))
 }

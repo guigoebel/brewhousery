@@ -27,7 +27,7 @@ func PutRouter() *mux.Router {
 
 func TestUpdateExistingProduct(t *testing.T) {
 	payload := []byte(`{"name": "Mocha", "description": "Chocolate-flavoured variant of latte", "price": 3.00, "sku": "COF-MOC-VAR-LAT"}`)
-	request, _ := http.NewRequest("PUT", "/coffee/modify/1", bytes.NewBuffer(payload))
+	request, _ := http.NewRequest("PUT", "/coffee/modify/2", bytes.NewBuffer(payload))
 	response := httptest.NewRecorder()
 	PutRouter().ServeHTTP(response, request)
 	assert.Equal(t, http.StatusNoContent, response.Code, "Product updated successfully!") // http.StatusNoContent = 204

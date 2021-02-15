@@ -34,7 +34,7 @@ func TestRetrieveAllProducts(t *testing.T) {
 }
 
 func TestRetrieveSingleProduct(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/coffee/get/1", nil)
+	request, _ := http.NewRequest("GET", "/coffee/get/2", nil)
 	response := httptest.NewRecorder()
 	GetRouter().ServeHTTP(response, request)
 	assert.Equal(t, 200, response.Code, "Product Found!")

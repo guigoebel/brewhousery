@@ -6,7 +6,7 @@ import (
 	"github.com/saurabmish/Coffee-Shop/data"
 )
 
-func (p *Products) RetrieveAll(w http.ResponseWriter, r *http.Request) {
+func (p Products) RetrieveAll(w http.ResponseWriter, r *http.Request) {
 	p.l.Println("[INFO] Endpoint for READ request")
 	w.Header().Add("Content-Type", "application/json")
 
@@ -21,7 +21,7 @@ func (p *Products) RetrieveAll(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (p *Products) RetrieveSingle(w http.ResponseWriter, r *http.Request) {
+func (p Products) RetrieveSingle(w http.ResponseWriter, r *http.Request) {
 	p.l.Println("[INFO] Endpoint for READ request")
 	w.Header().Add("Content-Type", "application/json")
 

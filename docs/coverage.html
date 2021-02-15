@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>handlers: Go Coverage Report</title>
+		<title>data: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -55,7 +55,23 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/saurabmish/Coffee-Shop/handlers/products.go (81.8%)</option>
+				<option value="file0">github.com/saurabmish/Coffee-Shop/data/json.go (50.0%)</option>
+				
+				<option value="file1">github.com/saurabmish/Coffee-Shop/data/products.go (0.0%)</option>
+				
+				<option value="file2">github.com/saurabmish/Coffee-Shop/data/validation.go (76.2%)</option>
+				
+				<option value="file3">github.com/saurabmish/Coffee-Shop/handlers/create.go (100.0%)</option>
+				
+				<option value="file4">github.com/saurabmish/Coffee-Shop/handlers/delete.go (100.0%)</option>
+				
+				<option value="file5">github.com/saurabmish/Coffee-Shop/handlers/middleware.go (100.0%)</option>
+				
+				<option value="file6">github.com/saurabmish/Coffee-Shop/handlers/products.go (83.3%)</option>
+				
+				<option value="file7">github.com/saurabmish/Coffee-Shop/handlers/read.go (84.2%)</option>
+				
+				<option value="file8">github.com/saurabmish/Coffee-Shop/handlers/update.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -69,42 +85,396 @@
 		</div>
 		<div id="content">
 		
-		<pre class="file" id="file0" style="display: none">package handlers
+		<pre class="file" id="file0" style="display: none">package data
+
+import (
+        "encoding/json"
+        "io"
+)
+
+// ToJSON serializes given interface into JSON string
+func ToJSON(i interface{}, w io.Writer) error <span class="cov8" title="1">{
+        e := json.NewEncoder(w)
+        return e.Encode(i)
+}</span>
+
+// FromJSON deserializes JSON string object to given interface
+func FromJSON(i interface{}, r io.Reader) error <span class="cov0" title="0">{
+        d := json.NewDecoder(r)
+        return d.Decode(i)
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package data
 
 import (
         "fmt"
-        "log"
+        "time"
+)
+
+type Product struct {
+        ID             int     `json:"id"`
+        Name           string  `json:"name"         validate:"required"`
+        Description    string  `json:"description"`
+        Price          float32 `json:"price"        validate:"gt=0"`
+        SKU            string  `json:"sku"          validate:"required,sku"`
+        ManufacturedOn string  `json:"-"`
+        ExpiresOn      string  `json:"expiry"`
+}
+
+var productList = []*Product{
+        &amp;Product{
+                ID:             1,
+                Name:           "Latte",
+                Description:    "Frothy milk coffee",
+                Price:          2.45,
+                SKU:            "COF-LAT-MIL-SUG",
+                ManufacturedOn: time.Now().UTC().String(),
+                ExpiresOn:      time.Now().UTC().String(),
+        },
+
+        &amp;Product{
+                ID:             2,
+                Name:           "Expresso",
+                Description:    "Short and strong coffee without milk",
+                Price:          1.99,
+                SKU:            "COF-EXP-NOM-SUG",
+                ManufacturedOn: time.Now().UTC().String(),
+                ExpiresOn:      time.Now().UTC().String(),
+        },
+}
+
+var ErrProductNotFound = fmt.Errorf("Product not found ...")
+
+type Products []*Product
+
+func GetAllProducts() Products <span class="cov0" title="0">{
+        return productList
+}</span>
+
+func GetSpecificProduct(id int) (*Product, error) <span class="cov0" title="0">{
+        pos := findProductIndex(id)
+        if pos == -1 </span><span class="cov0" title="0">{
+                return nil, ErrProductNotFound
+        }</span>
+        <span class="cov0" title="0">return productList[pos], nil</span>
+}
+
+func AddProduct(p *Product) <span class="cov0" title="0">{
+        currentID := productList[len(productList)-1].ID
+        p.ID = currentID + 1
+        productList = append(productList, p)
+}</span>
+
+func UpdateProduct(id int, p *Product) error <span class="cov0" title="0">{
+        pos := findProductIndex(id)
+        if pos == -1 </span><span class="cov0" title="0">{
+                return ErrProductNotFound
+        }</span>
+        <span class="cov0" title="0">p.ID = id
+        productList[pos] = p
+        return nil</span>
+}
+
+func DeleteProduct(id int) error <span class="cov0" title="0">{
+        pos := findProductIndex(id)
+        if pos == -1 </span><span class="cov0" title="0">{
+                return ErrProductNotFound
+        }</span>
+        <span class="cov0" title="0">productList = append(productList[:pos], productList[pos+1:]...)
+        return nil</span>
+}
+
+func findProductIndex(id int) int <span class="cov0" title="0">{
+        for i, p := range productList </span><span class="cov0" title="0">{
+                if p.ID == id </span><span class="cov0" title="0">{
+                        return i
+                }</span>
+        }
+        <span class="cov0" title="0">return -1</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package data
+
+import (
+        "fmt"
+        "regexp"
+
+        "github.com/go-playground/validator"
+)
+
+type ValidationError struct {
+        validator.FieldError
+}
+
+func (v ValidationError) Error() string <span class="cov0" title="0">{
+        return fmt.Sprintf(
+                "Key: '%s' Error: Field validation for '%s' failed on the '%s' tag",
+                v.Namespace(),
+                v.Field(),
+                v.Tag(),
+        )
+}</span>
+
+type ValidationErrors []ValidationError
+
+func (v ValidationErrors) Errors() []string <span class="cov0" title="0">{
+        errs := []string{}
+        for _, err := range v </span><span class="cov0" title="0">{
+                errs = append(errs, err.Error())
+        }</span>
+
+        <span class="cov0" title="0">return errs</span>
+}
+
+type Validation struct {
+        validate *validator.Validate
+}
+
+func NewValidation() *Validation <span class="cov8" title="1">{
+        validate := validator.New()
+        validate.RegisterValidation("sku", validateSKU)
+
+        return &amp;Validation{validate}
+}</span>
+
+func (v *Validation) Validate(i interface{}) ValidationErrors <span class="cov8" title="1">{
+        errs := v.validate.Struct(i)
+
+        if errs == nil </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">var returnErrs []ValidationError
+        for _, err := range errs.(validator.ValidationErrors) </span><span class="cov8" title="1">{
+                ve := ValidationError{err.(validator.FieldError)}
+                returnErrs = append(returnErrs, ve)
+        }</span>
+
+        <span class="cov8" title="1">return returnErrs</span>
+}
+
+func validateSKU(fl validator.FieldLevel) bool <span class="cov8" title="1">{
+        re := regexp.MustCompile(`[A-Z]+-[A-Z]+-[A-Z]+-[A-Z]+`)
+        matches := re.FindAllString(fl.Field().String(), -1)
+        if len(matches) == 1 </span><span class="cov8" title="1">{
+                return true
+        }</span>
+        <span class="cov8" title="1">return false</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package handlers
+
+import (
         "net/http"
 
         "github.com/saurabmish/Coffee-Shop/data"
 )
 
-// Products is a struct which implements the HTTP handler interface
+func (p Products) Add(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        p.l.Println("[INFO] Endpoint for POST request")
+        product := r.Context().Value(KeyProduct{}).(data.Product)
+        p.l.Println("[DEBUG] Adding product to list")
+        data.AddProduct(&amp;product)
+        //if err != nil {
+        //        w.WriteHeader(http.StatusInternalServerError)
+        //        data.ToJSON(&amp;GenericError{Message: "Couldn't create product ..."}, w)
+        //        p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
+        //        return
+        //}
+        w.WriteHeader(http.StatusCreated)
+        data.ToJSON(&amp;GenericError{Message: "Product created successfully!"}, w)
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package handlers
+
+import (
+        "net/http"
+
+        "github.com/saurabmish/Coffee-Shop/data"
+)
+
+func (p Products) Remove(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        p.l.Println("[INFO] Endpoint for DELETE request")
+        w.Header().Add("Content-Type", "application/json")
+
+        id := getProductID(r)
+        p.l.Println("[DEBUG] Retrieved product ID: ", id)
+
+        err := data.DeleteProduct(id)
+        if err == data.ErrProductNotFound </span><span class="cov8" title="1">{
+                w.WriteHeader(http.StatusNotFound)
+                data.ToJSON(&amp;GenericError{Message: "Couldn't delete product; ID not found ..."}, w)
+                p.l.Println("[ERROR] Fetching product with given ID ...", err)
+                return
+
+        }</span>
+        //if err != nil {
+        //        http.Error(w, "Cannot delete product ...", http.StatusInternalServerError)
+        //        return
+        //}
+        <span class="cov8" title="1">w.WriteHeader(http.StatusNoContent)</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package handlers
+
+import (
+        "context"
+        "net/http"
+
+        "github.com/saurabmish/Coffee-Shop/data"
+)
+
+func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler <span class="cov8" title="1">{
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov8" title="1">{
+                p.l.Println("[INFO] Middleware validation handler function")
+                w.Header().Add("Content-Type", "application/json")
+
+                product := &amp;data.Product{}
+                p.l.Println("[DEBUG] Retrieved product data from URL")
+
+                err := data.FromJSON(product, r.Body)
+                if err != nil </span><span class="cov8" title="1">{
+                        w.WriteHeader(http.StatusBadRequest)
+                        data.ToJSON(&amp;GenericError{Message: err.Error()}, w)
+                        p.l.Println("[ERROR] deserializing product", err)
+                        return
+                }</span>
+
+                <span class="cov8" title="1">errs := p.v.Validate(product)
+                if len(errs) != 0 </span><span class="cov8" title="1">{
+                        w.WriteHeader(http.StatusUnprocessableEntity)
+                        p.l.Println("[ERROR] validating product", errs)
+                        return
+                }</span>
+
+                <span class="cov8" title="1">ctx := context.WithValue(r.Context(), KeyProduct{}, *product)
+                r = r.WithContext(ctx)
+
+                next.ServeHTTP(w, r)</span>
+        })
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package handlers
+
+import (
+        "log"
+        "net/http"
+        "strconv"
+
+        "github.com/gorilla/mux"
+        "github.com/saurabmish/Coffee-Shop/data"
+)
+
+type KeyProduct struct{}
+
 type Products struct {
         l *log.Logger
+        v *data.Validation
 }
 
-// NewProducts is going to accept a logger and return products as a reference
-func NewProducts(l *log.Logger) *Products <span class="cov8" title="1">{
-        return &amp;Products{l}
+type GenericError struct {
+        Message string `json:"message"`
+}
+
+func NewProducts(l *log.Logger, v *data.Validation) *Products <span class="cov8" title="1">{
+        return &amp;Products{l, v}
 }</span>
 
-func (p *Products) ServeHTTP(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
-        if r.Method == http.MethodGet </span><span class="cov8" title="1">{
-                p.getProducts(w, r)
+// getProductID converts string ID from the request URI to integer ID
+// Used in handler functions 'RetrieveSingle', 'Update', and 'Remove'
+func getProductID(r *http.Request) int <span class="cov8" title="1">{
+        vars := mux.Vars(r)
+        id, err := strconv.Atoi(vars["id"])
+        if err == nil </span><span class="cov8" title="1">{
+                return id
+        }</span>
+        <span class="cov0" title="0">panic(err)</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package handlers
+
+import (
+        "net/http"
+
+        "github.com/saurabmish/Coffee-Shop/data"
+)
+
+func (p Products) RetrieveAll(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        p.l.Println("[INFO] Endpoint for READ request")
+        w.Header().Add("Content-Type", "application/json")
+
+        products := data.GetAllProducts()
+        p.l.Println("[DEBUG] Retrieved all products")
+
+        err := data.ToJSON(products, w)
+        if err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusInternalServerError)
+                p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
                 return
         }</span>
-        <span class="cov0" title="0">w.WriteHeader(http.StatusMethodNotAllowed)</span>
 }
 
-func (p *Products) getProducts(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
-        p.l.Println("Hit endpoint '/'")
-        fmt.Fprintf(w, "Welcome to coffee shop!")
-        listProducts := data.GetProducts()
-        err := listProducts.ToJSON(w)
-        if err != nil </span><span class="cov0" title="0">{
-                http.Error(w, "Unable to parse values to JSON", http.StatusInternalServerError)
+func (p Products) RetrieveSingle(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        p.l.Println("[INFO] Endpoint for READ request")
+        w.Header().Add("Content-Type", "application/json")
+
+        id := getProductID(r)
+        p.l.Println("[DEBUG] Retrieved product ID from URL: ", id)
+
+        _, err := data.GetSpecificProduct(id)
+        if err != nil </span><span class="cov8" title="1">{
+                w.WriteHeader(http.StatusNotFound)
+                data.ToJSON(&amp;GenericError{Message: "Product not found ..."}, w)
+                p.l.Println("[ERROR] Fetching product with given ID ...", err)
+                return
         }</span>
+
+        //val := data.ToJSON(product, w)
+        //if val != nil {
+        //        w.WriteHeader(http.StatusInternalServerError)
+        //        p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
+        //        return
+        //}
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package handlers
+
+import (
+        "net/http"
+
+        "github.com/saurabmish/Coffee-Shop/data"
+)
+
+func (p Products) Modify(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        p.l.Println("[INFO] Endpoint for PUT request")
+        w.Header().Add("Content-Type", "application/json")
+
+        id := getProductID(r)
+        p.l.Println("[DEBUG] Retrieved product ID from URL: ", id)
+        product := r.Context().Value(KeyProduct{}).(data.Product)
+        p.l.Println("[DEBUG] Retrieved product from data store")
+
+        err := data.UpdateProduct(id, &amp;product)
+        if err == data.ErrProductNotFound </span><span class="cov8" title="1">{
+                w.WriteHeader(http.StatusNotFound)
+                data.ToJSON(&amp;GenericError{Message: "Couldn't update product; ID not found ..."}, w)
+                p.l.Println("[ERROR] Fetching product with given ID ...", err)
+                return
+        }</span>
+        //if err != nil {
+        //        w.WriteHeader(http.StatusInternalServerError)
+        //        p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
+        //        return
+        //}
+        <span class="cov8" title="1">w.WriteHeader(http.StatusNoContent)</span>
 }
 </pre>
 		

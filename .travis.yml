@@ -9,23 +9,19 @@ go:
 
 stages:
   - test
-  - cover
-  - report
+  - coverage and report
 
 jobs:
   include:
     - stage: test
       script:
-        - go test -v ./...
-
-    - stage: cover
-      script:
+        - go test ./...
         - go test -v -coverprofile coverage.out ./...
-        - go tool cover -html=coverage.out -o ./docs/coverage.html
 
-    - stage: report
+    - stage: coverage and report
       script:
-        - bash <(curl -s https://codecov.io/bash) -f ./docs/coverage.html
+        - go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+        - bash <(curl -s https://codecov.io/bash)
 
 notifications:
   email:

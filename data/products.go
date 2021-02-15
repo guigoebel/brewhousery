@@ -53,10 +53,11 @@ func GetSpecificProduct(id int) (*Product, error) {
 	return productList[pos], nil
 }
 
-func AddProduct(p *Product) {
+func AddProduct(p *Product) int {
 	currentID := productList[len(productList)-1].ID
 	p.ID = currentID + 1
 	productList = append(productList, p)
+	return 1
 }
 
 func UpdateProduct(id int, p *Product) error {

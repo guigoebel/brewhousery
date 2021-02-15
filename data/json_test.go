@@ -64,27 +64,27 @@ func TestProductDetailsToJSON(t *testing.T) {
 func TestProductNameFromJSON(t *testing.T) {
 	payload := `{"name": "Flat White"}`
 	b := bytes.NewBufferString(payload)
-	err := ToJSON(&Product{}, b)
+	err := FromJSON(&Product{}, b)
 	assert.NoError(t, err)
 }
 
 func TestProductNameAndPriceFromJSON(t *testing.T) {
 	payload := `{"name": "Flat White", "price": 2.50}`
 	b := bytes.NewBufferString(payload)
-	err := ToJSON(&Product{}, b)
+	err := FromJSON(&Product{}, b)
 	assert.NoError(t, err)
 }
 
 func TestProductNamePriceAndSKUFromJSON(t *testing.T) {
 	payload := `{"name": "Flat White", "price": 2.50, "sku": "FLA-WHI-ESP-MIL"}`
 	b := bytes.NewBufferString(payload)
-	err := ToJSON(&Product{}, b)
+	err := FromJSON(&Product{}, b)
 	assert.NoError(t, err)
 }
 
 func TestProductDetailsFromJSON(t *testing.T) {
-	payload := `{"name": "Flat White", "description":""Espresso-based drink with steamed milk."", "price": 2.50, "sku": "FLA-WHI-ESP-MIL"}`
+	payload := `{"name": "Flat White", "description":"Espresso-based drink with steamed milk.", "price": 2.50, "sku": "FLA-WHI-ESP-MIL"}`
 	b := bytes.NewBufferString(payload)
-	err := ToJSON(&Product{}, b)
+	err := FromJSON(&Product{}, b)
 	assert.NoError(t, err)
 }

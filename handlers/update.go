@@ -22,10 +22,10 @@ func (p Products) Modify(w http.ResponseWriter, r *http.Request) {
 		p.l.Println("[ERROR] Fetching product with given ID ...", err)
 		return
 	}
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
-		return
-	}
+	//if err != nil {
+	//	w.WriteHeader(http.StatusInternalServerError)
+	//	p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
+	//	return
+	//}
 	w.WriteHeader(http.StatusNoContent)
 }

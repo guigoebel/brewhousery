@@ -21,9 +21,9 @@ func (p Products) Remove(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	if err != nil {
-		http.Error(w, "Cannot delete product ...", http.StatusInternalServerError)
-		return
-	}
+	//if err != nil {
+	//	http.Error(w, "Cannot delete product ...", http.StatusInternalServerError)
+	//	return
+	//}
 	w.WriteHeader(http.StatusNoContent)
 }

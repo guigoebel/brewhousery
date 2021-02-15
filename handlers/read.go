@@ -28,7 +28,7 @@ func (p Products) RetrieveSingle(w http.ResponseWriter, r *http.Request) {
 	id := getProductID(r)
 	p.l.Println("[DEBUG] Retrieved product ID from URL: ", id)
 
-	product, err := data.GetSpecificProduct(id)
+	_, err := data.GetSpecificProduct(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		data.ToJSON(&GenericError{Message: "Product not found ..."}, w)
@@ -36,10 +36,10 @@ func (p Products) RetrieveSingle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	val := data.ToJSON(product, w)
-	if val != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
-		return
-	}
+	//val := data.ToJSON(product, w)
+	//if val != nil {
+	//	w.WriteHeader(http.StatusInternalServerError)
+	//	p.l.Println("[ERROR] Unable to parse values to JSON ...", err)
+	//	return
+	//}
 }

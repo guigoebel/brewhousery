@@ -12,7 +12,7 @@ type Product struct {
 	Price          float32 `json:"price"        validate:"gt=0"`
 	SKU            string  `json:"sku"          validate:"required,sku"`
 	ManufacturedOn string  `json:"-"`
-	ExpiresOn      string  `json:"expiry"`
+	ExpiresOn      string  `json:"-"`
 }
 
 var productList = []*Product{

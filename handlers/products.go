@@ -32,5 +32,5 @@ func getProductID(r *http.Request) int {
 	if err == nil {
 		return id
 	}
-	panic(err)
+	return -1
 }

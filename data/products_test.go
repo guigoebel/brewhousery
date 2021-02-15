@@ -11,10 +11,24 @@ func TestGetAllProducts(t *testing.T) {
 	}
 }
 
-func TestFindProductIndex(t *testing.T) {
+func TestGetSpecificProduct(t *testing.T) {
+	prod, err := GetSpecificProduct(1)
+	if prod == nil && err == ErrProductNotFound {
+		t.Errorf("Could not find product with given ID")
+	}
+}
+
+func TestFindExistingProductIndex(t *testing.T) {
 	got := findProductIndex(1)
 	if got == -1 {
 		t.Errorf("Could not find product with given ID")
+	}
+}
+
+func TestFindNonExistingProductIndex(t *testing.T) {
+	got := findProductIndex(10)
+	if got != -1 {
+		t.Errorf("Product doesn't exist, cannot retrieve ...")
 	}
 }
 
@@ -31,3 +45,25 @@ func TestDeleteNonExistingProduct(t *testing.T) {
 		t.Errorf("Product doesn't exist, cannot delete ...")
 	}
 }
+
+/*
+func TestAddProduct(t *testing.T) {
+	payload := &Product{
+		12,
+		"Flat White",
+		"Espresso-based drink with steamed milk.",
+		2.50,
+		"FLA-WHI-ESP-MIL",
+		time.Now().UTC().String(),
+		time.Now().UTC().String(),
+	}
+	_, err := json.Marshal(payload)
+	if err != nil {
+		t.Errorf("Cannot add product ...")
+	}
+
+	if AddProduct(payload) != nil {
+		t.Errorf("Cannot add product ...")
+	}
+}
+*/

@@ -1,2 +1,6 @@
+# OS
 .DS_Store
+
+# Code coverage
 *.out
+*.txt

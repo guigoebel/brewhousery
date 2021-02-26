@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/saurabmish/Coffee-Shop.svg?branch=master)](https://travis-ci.com/saurabmish/Coffee-Shop)
+[![Build Status](https://travis-ci.com/saurabmish/brewhousery.svg?branch=master)](https://travis-ci.com/saurabmish/brewhousery)
 [![codecov](https://codecov.io/gh/saurabmish/Coffee-Shop/branch/master/graph/badge.svg?token=YUPUN62OPY)](https://codecov.io/gh/saurabmish/Coffee-Shop)
 
 # Coffee Shop

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/saurabmish/brewhousery.svg?branch=master)](https://travis-ci.com/saurabmish/brewhousery)
+[![Build Status](https://app.travis-ci.com/saurabh-mish/brewhousery.svg?branch=master)](https://app.travis-ci.com/saurabh-mish/brewhousery)
 [![codecov](https://codecov.io/gh/saurabmish/brewhousery/branch/master/graph/badge.svg?token=YUPUN62OPY)](https://codecov.io/gh/saurabmish/brewhousery)
 
 # Brewhousery
